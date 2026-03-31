@@ -233,6 +233,66 @@ input[type=checkbox].week-radio{display:none}
 .week-summary{font-size:0.82rem;color:var(--text2);line-height:1.6}
 .days-container{padding:0 3rem 3rem}
 
+/* ── DONE + COMMENT ── */
+.session-footer{
+  border-top:1px solid var(--border);
+  padding:1rem 1.25rem;
+  display:flex;flex-direction:column;gap:0.75rem;
+}
+.done-row{display:flex;align-items:center;gap:0.75rem}
+.done-cb{display:none}
+.done-label{
+  display:flex;align-items:center;gap:0.6rem;
+  cursor:pointer;
+  font-size:0.82rem;font-weight:500;
+  color:var(--text2);
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+  padding:0.5rem 0.75rem;
+  border:1px solid var(--border2);
+  border-radius:6px;
+  transition:all 0.15s;
+}
+.done-label:hover{border-color:var(--green);color:var(--green)}
+.done-box{
+  width:18px;height:18px;border-radius:4px;
+  border:2px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all 0.15s;font-size:0.7rem;
+}
+.done-cb:checked + .done-label{
+  border-color:var(--green);
+  background:var(--green-dim);
+  color:var(--green);
+}
+.done-cb:checked + .done-label .done-box{
+  background:var(--green);
+  border-color:var(--green);
+  color:#000;
+}
+.done-cb:checked + .done-label .done-box::after{content:'✓'}
+.comment-area{
+  width:100%;
+  background:var(--s3);
+  border:1px solid var(--border2);
+  border-radius:6px;
+  padding:0.6rem 0.75rem;
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:0.82rem;
+  line-height:1.5;
+  resize:vertical;
+  min-height:70px;
+  outline:none;
+  transition:border-color 0.15s;
+}
+.comment-area::placeholder{color:var(--text3)}
+.comment-area:focus{border-color:var(--accent)}
+.comment-label{font-size:0.62rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:0.3rem}
+
+/* done state — card border */
+.done-cb:checked ~ * .day-card-inner{border-color:var(--green)}
+
 /* ── RESPONSIVE ── */
 @media(max-width:700px){
   .hero{padding:2rem 1.25rem}
@@ -922,24 +982,87 @@ input[type=checkbox].week-radio{display:none}
   </div>
 </div>
 
-<!-- CSS for week panel visibility based on radio state -->
-<!-- Using adjacent sibling combinator: radio inputs are before week-tabs and panels in DOM -->
 <style>
-/* The radio inputs are at top of body, tabs and panels come after hero/sections */
-/* We need a different approach: wrap everything in a container */
-/* Actually the cleanest CSS-only approach for tabs requires them to be siblings */
-/* Let's use a JS-free approach with the :target pseudo-class instead */
+/* ── SESSION FOOTER ── */
+.session-footer{
+  margin-top:1.25rem;
+  border-top:1px solid var(--border);
+  padding-top:1rem;
+  display:flex;flex-direction:column;gap:0.75rem;
+}
+.done-row{display:flex;align-items:center;gap:0.75rem}
+.done-cb{display:none}
+.done-label{
+  display:flex;align-items:center;gap:0.6rem;
+  cursor:pointer;font-size:0.85rem;font-weight:500;
+  color:var(--text2);
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+.done-box{
+  width:22px;height:22px;border-radius:5px;
+  border:2px solid var(--border2);
+  background:var(--s3);
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;
+}
+.done-cb:checked + .done-label .done-box{
+  background:var(--green);border-color:var(--green);
+}
+.done-cb:checked + .done-label .done-box::after{
+  content:'✓';color:#000;font-size:0.8rem;font-weight:700;
+}
+.done-cb:checked + .done-label{color:var(--green)}
+.comment-label{
+  font-size:0.62rem;font-weight:600;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:0.4rem;
+}
+.comment-area{
+  width:100%;min-height:70px;
+  background:var(--s3);border:1px solid var(--border2);
+  border-radius:6px;padding:0.7rem 0.85rem;
+  color:var(--text);font-family:var(--sans);font-size:0.83rem;
+  line-height:1.6;resize:vertical;
+  transition:border-color 0.15s;
+}
+.comment-area:focus{outline:none;border-color:var(--accent)}
+.comment-area::placeholder{color:var(--text3)}
+/* Done card highlight */
+.day-card.done{border-color:var(--green) !important;border-width:2px !important}
+.day-card.done .day-num{color:var(--green)}
+/* Done badge on header */
+.done-badge{
+  display:none;
+  font-size:0.6rem;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  background:var(--green-dim);color:var(--green);
+  border:1px solid rgba(62,207,116,0.3);
+  padding:0.1rem 0.5rem;border-radius:20px;
+  flex-shrink:0;
+}
+.day-card.done .done-badge{display:inline-block}
 </style>
 
 <script>
-/* Minimal JS only for week tabs — fallback since CSS sibling approach requires specific DOM structure */
-/* All day toggles use pure CSS checkbox — fully works without JS */
 (function(){
+  var STORE_KEY = 'hyrox_bcn_2026';
+
+  /* ── Load saved data ── */
+  function loadData(){
+    try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+    catch(e){ return {}; }
+  }
+  function saveData(data){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }catch(e){}
+  }
+
+  /* ── WEEK TABS ── */
   var panels = document.querySelectorAll('.week-panel');
   var tabs = document.querySelectorAll('.week-tab-label');
-  var radios = document.querySelectorAll('.week-radio');
 
-  function showWeek(idx) {
+  function showWeek(idx){
     panels.forEach(function(p,i){ p.style.display = i===idx ? 'block' : 'none'; });
     tabs.forEach(function(t,i){
       t.style.color = i===idx ? 'var(--accent)' : '';
@@ -948,13 +1071,77 @@ input[type=checkbox].week-radio{display:none}
       t.style.borderBottomColor = i===idx ? 'var(--bg)' : 'transparent';
     });
   }
+  tabs.forEach(function(t,i){ t.addEventListener('click', function(){ showWeek(i); }); });
+  showWeek(0);
 
-  tabs.forEach(function(t,i){
-    t.addEventListener('click', function(){ showWeek(i); });
+  /* ── INJECT DONE + COMMENT into every toggle-content ── */
+  var data = loadData();
+  var contents = document.querySelectorAll('.toggle-content');
+
+  contents.forEach(function(tc, i){
+    var key = 'session_' + i;
+    var saved = data[key] || { done: false, comment: '' };
+
+    /* Build footer */
+    var cbId = 'done-cb-' + i;
+    var footer = document.createElement('div');
+    footer.className = 'session-footer';
+    footer.innerHTML =
+      '<div class="done-row">' +
+        '<input type="checkbox" class="done-cb" id="' + cbId + '"' + (saved.done ? ' checked' : '') + '>' +
+        '<label class="done-label" for="' + cbId + '"><span class="done-box"></span>Séance complétée ✓</label>' +
+      '</div>' +
+      '<div>' +
+        '<div class="comment-label">Notes / Ressenti</div>' +
+        '<textarea class="comment-area" placeholder="Allures réelles, ressenti relances, points à retenir pour la prochaine fois...">' +
+          (saved.comment || '') +
+        '</textarea>' +
+      '</div>';
+    tc.appendChild(footer);
+
+    var card = tc.closest('.day-card');
+    var cb = footer.querySelector('.done-cb');
+    var ta = footer.querySelector('.comment-area');
+
+    /* Inject done badge into header label */
+    var headerLabel = card.querySelector('.toggle-label');
+    if(headerLabel){
+      var badge = document.createElement('span');
+      badge.className = 'done-badge';
+      badge.textContent = '✓ Fait';
+      /* Insert before chevron */
+      var chevron = headerLabel.querySelector('.chevron');
+      if(chevron) headerLabel.insertBefore(badge, chevron);
+      else headerLabel.appendChild(badge);
+    }
+
+    /* Apply saved done state */
+    if(saved.done && card){ card.classList.add('done'); }
+
+    /* Checkbox change */
+    cb.addEventListener('change', function(){
+      var d = loadData();
+      d[key] = d[key] || {};
+      d[key].done = this.checked;
+      if(!d[key].comment) d[key].comment = ta.value;
+      saveData(d);
+      if(card){ card.classList.toggle('done', this.checked); }
+    });
+
+    /* Comment change — debounced */
+    var timer;
+    ta.addEventListener('input', function(){
+      clearTimeout(timer);
+      var val = this.value;
+      timer = setTimeout(function(){
+        var d = loadData();
+        d[key] = d[key] || {};
+        d[key].comment = val;
+        saveData(d);
+      }, 600);
+    });
   });
 
-  // init
-  showWeek(0);
 })();
 </script>
 
