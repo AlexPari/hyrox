@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyrox Barcelona 2026 — Plan Alexandre Pari</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080808;
+  --s1: #0f0f0f;
+  --s2: #161616;
+  --s3: #1e1e1e;
+  --border: #252525;
+  --border2: #303030;
+  --accent: #f0c040;
+  --accent-dim: rgba(240,192,64,0.12);
+  --red: #ff3d3d;
+  --red-dim: rgba(255,61,61,0.1);
+  --blue: #4da6ff;
+  --blue-dim: rgba(77,166,255,0.1);
+  --green: #3ecf74;
+  --green-dim: rgba(62,207,116,0.1);
+  --purple: #b57cf6;
+  --purple-dim: rgba(181,124,246,0.1);
+  --orange: #ff7b35;
+  --orange-dim: rgba(255,123,53,0.1);
+  --text: #e0e0e0;
+  --text2: #999;
+  --text3: #666;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+  --display: 'Bebas Neue', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.6}
+
+/* ── CSS TOGGLE SYSTEM ── */
+input[type=checkbox].toggle{display:none}
+input[type=checkbox].week-radio{display:none}
+
+/* Day toggles */
+.toggle-label{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.25rem;
+  cursor:pointer;
+  border-bottom:1px solid transparent;
+  transition:background 0.15s;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+.toggle-label:hover{background:rgba(255,255,255,0.02)}
+.toggle-content{
+  display:none;
+  padding:1.25rem;
+}
+.toggle:checked ~ .toggle-content{display:block}
+.toggle:checked ~ .toggle-label{border-bottom-color:var(--border)}
+.chevron{margin-left:auto;color:var(--text3);font-size:0.8rem;transition:transform 0.2s;flex-shrink:0}
+.toggle:checked ~ .toggle-label .chevron{transform:rotate(180deg)}
+
+/* Week tabs — radio button system */
+.week-tabs{
+  display:flex;gap:0.5rem;flex-wrap:wrap;
+  padding:1.5rem 3rem 0;
+  border-bottom:1px solid var(--border);
+  background:var(--s1);
+  position:sticky;top:0;z-index:40;
+}
+.week-tab-label{
+  padding:0.5rem 1rem;
+  font-size:0.75rem;font-weight:500;
+  letter-spacing:0.05em;text-transform:uppercase;
+  border-radius:6px 6px 0 0;
+  cursor:pointer;
+  border:1px solid transparent;
+  border-bottom:none;
+  color:var(--text2);
+  transition:all 0.15s;
+  margin-bottom:-1px;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+.week-tab-label:hover{color:var(--text);background:var(--s2)}
+
+/* Week content hidden by default */
+.week-panel{display:none}
+
+/* Radio checked states for each week */
+#w0:checked ~ .week-tabs label[for=w0],
+#w1:checked ~ .week-tabs label[for=w1],
+#w2:checked ~ .week-tabs label[for=w2],
+#w3:checked ~ .week-tabs label[for=w3],
+#w4:checked ~ .week-tabs label[for=w4],
+#w5:checked ~ .week-tabs label[for=w5],
+#w6:checked ~ .week-tabs label[for=w6]{
+  color:var(--accent);
+  background:var(--bg);
+  border-color:var(--border);
+  border-bottom-color:var(--bg);
+}
+#w0:checked ~ #panel0,
+#w1:checked ~ #panel1,
+#w2:checked ~ #panel2,
+#w3:checked ~ #panel3,
+#w4:checked ~ #panel4,
+#w5:checked ~ #panel5,
+#w6:checked ~ #panel6{display:block}
+
+/* ── HERO ── */
+.hero{
+  padding:3rem 3rem 2.5rem;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0a0a0a 0%,#0f0d06 100%);
+}
+.hero::before{
+  content:'BCN';
+  position:absolute;right:-2rem;top:50%;transform:translateY(-50%);
+  font-family:var(--display);font-size:18rem;
+  color:rgba(240,192,64,0.03);letter-spacing:-0.02em;
+  pointer-events:none;line-height:1;
+}
+.hero-eyebrow{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;font-weight:500}
+.hero-title{font-family:var(--display);font-size:clamp(2.2rem,5vw,4.5rem);letter-spacing:0.03em;line-height:0.95;margin-bottom:1.5rem}
+.hero-title span{color:var(--accent)}
+.hero-stats{display:flex;flex-wrap:wrap;gap:2rem;margin-top:1.5rem;align-items:center}
+.hero-stat-val{font-family:var(--display);font-size:2rem;line-height:1}
+.hero-stat-val.bad{color:var(--red)}
+.hero-stat-val.target{color:var(--green)}
+.hero-stat-label{font-size:0.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.15rem}
+.arrow-hero{font-family:var(--display);font-size:2rem;color:var(--accent)}
+.divider-v{width:1px;background:var(--border);align-self:stretch}
+
+/* ── SECTIONS ── */
+.section{padding:2.5rem 3rem;border-bottom:1px solid var(--border)}
+.section-header{display:flex;align-items:center;gap:1rem;margin-bottom:2rem}
+.section-title{font-family:var(--display);font-size:1.3rem;letter-spacing:0.08em;color:var(--text)}
+.section-line{flex:1;height:1px;background:var(--border)}
+
+/* ── CARDS ── */
+.diag-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+.diag-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:1.25rem}
+.diag-card.red{border-top:2px solid var(--red)}
+.diag-card.yellow{border-top:2px solid var(--accent)}
+.diag-card.green{border-top:2px solid var(--green)}
+.diag-card-title{font-family:var(--display);font-size:1rem;letter-spacing:0.06em;margin-bottom:0.75rem}
+.diag-card.red .diag-card-title{color:var(--red)}
+.diag-card.yellow .diag-card-title{color:var(--accent)}
+.diag-card.green .diag-card-title{color:var(--green)}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0;border-bottom:1px solid var(--border);font-size:0.8rem}
+.stat-row:last-child{border:none}
+.stat-l{color:var(--text2)}
+.stat-v{font-family:var(--mono);font-size:0.78rem;font-weight:500}
+.stat-v.r{color:var(--red)}
+.stat-v.y{color:var(--accent)}
+.stat-v.g{color:var(--green)}
+
+.alert-box{background:#130a00;border:1px solid #3d2200;border-left:3px solid var(--accent);border-radius:6px;padding:1.25rem;font-size:0.85rem;line-height:1.75}
+.alert-box strong{color:var(--accent);font-weight:600}
+
+/* ── DETAIL BLOCKS ── */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:600px){.detail-grid{grid-template-columns:1fr}}
+.detail-block{background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:1rem}
+.detail-block-label{font-size:0.62rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:0.6rem}
+.detail-block-content{font-size:0.83rem;line-height:1.7;color:var(--text)}
+.detail-block-content strong{color:var(--accent);font-weight:600}
+.pace{font-family:var(--mono);background:var(--blue-dim);color:var(--blue);padding:0.05rem 0.3rem;border-radius:3px;font-size:0.78rem}
+.load{font-family:var(--mono);background:var(--orange-dim);color:var(--orange);padding:0.05rem 0.3rem;border-radius:3px;font-size:0.78rem}
+.warn{color:var(--red);font-weight:500}
+.ok{color:var(--green);font-weight:500}
+
+/* ── STEPS ── */
+.steps-list{list-style:none;padding:0}
+.step-item{display:flex;gap:0.75rem;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.82rem}
+.step-item:last-child{border:none}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--s3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:0.65rem;color:var(--text3);flex-shrink:0;margin-top:0.1rem}
+.step-num.hl{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+.step-body{flex:1;line-height:1.6}
+.step-badge{display:inline-block;font-size:0.6rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.05rem 0.35rem;border-radius:2px;margin-right:0.3rem}
+.sb-wu{background:var(--green-dim);color:var(--green)}
+.sb-main{background:var(--orange-dim);color:var(--orange)}
+.sb-cd{background:var(--blue-dim);color:var(--blue)}
+.sb-key{background:var(--accent-dim);color:var(--accent)}
+.sb-str{background:var(--purple-dim);color:var(--purple)}
+
+/* ── INTENSITY ── */
+.intensity-row{display:flex;gap:4px;align-items:center;margin-top:0.3rem}
+.int-pip{width:28px;height:5px;border-radius:2px;background:var(--border2)}
+.int-pip.z1{background:#3ecf74}.int-pip.z2{background:#60b8ff}.int-pip.z3{background:#f0c040}.int-pip.z4{background:#ff7b35}.int-pip.z5{background:#ff3d3d}
+.int-label{font-size:0.7rem;color:var(--text3);margin-left:0.3rem}
+
+/* ── PACE TABLE ── */
+.pace-table{width:100%;border-collapse:collapse;font-size:0.78rem;margin-top:0.5rem}
+.pace-table th{text-align:left;padding:0.4rem 0.5rem;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border2);font-weight:600}
+.pace-table td{padding:0.4rem 0.5rem;border-bottom:1px solid var(--border);font-family:var(--mono)}
+.pace-table tr:last-child td{border:none}
+.pace-table .tgt{color:var(--blue)}.pace-table .cur{color:var(--red)}.pace-table .gain{color:var(--green);font-size:0.72rem}
+
+/* ── DAY CARD ── */
+.day-card{background:var(--s2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:1rem}
+.day-card.rest{opacity:0.5}
+.day-card.vac{opacity:0.6}
+.day-card.ferie{background:#0d0b04;border-color:#2a2500}
+.day-card.race-day{background:#0d0b00;border-color:rgba(240,192,64,0.3);border-width:2px}
+
+.day-date-block{flex-shrink:0;text-align:center;width:48px}
+.day-weekday{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3)}
+.day-num{font-family:var(--display);font-size:1.6rem;line-height:1;color:var(--text2)}
+.day-info{flex:1}
+.day-tag{display:inline-block;font-size:0.62rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:0.1rem 0.45rem;border-radius:3px;margin-bottom:0.25rem}
+.tag-run{background:var(--blue-dim);color:var(--blue)}
+.tag-hyrox{background:var(--orange-dim);color:var(--orange)}
+.tag-renfo{background:var(--purple-dim);color:var(--purple)}
+.tag-vitesse{background:var(--red-dim);color:var(--red)}
+.tag-taper{background:var(--green-dim);color:var(--green)}
+.tag-rest{background:rgba(40,40,40,0.6);color:var(--text3)}
+.tag-race{background:var(--accent-dim);color:var(--accent)}
+.day-title{font-size:0.95rem;font-weight:500;line-height:1.3}
+.day-subtitle{font-size:0.75rem;color:var(--text2);margin-top:0.1rem}
+.day-duration{font-family:var(--mono);font-size:0.72rem;color:var(--text3);flex-shrink:0}
+
+/* ── WEEK META ── */
+.week-meta{padding:1.5rem 3rem 1rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.week-phase-badge{font-family:var(--display);font-size:1rem;letter-spacing:0.1em;padding:0.3rem 0.75rem;border-radius:4px}
+.phase-build{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(77,166,255,0.2)}
+.phase-peak{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,61,61,0.2)}
+.phase-vac{background:rgba(80,80,80,0.15);color:#777;border:1px solid #333}
+.phase-taper{background:var(--green-dim);color:var(--green);border:1px solid rgba(62,207,116,0.2)}
+.phase-race{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(240,192,64,0.3)}
+.week-summary{font-size:0.82rem;color:var(--text2);line-height:1.6}
+.days-container{padding:0 3rem 3rem}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .hero{padding:2rem 1.25rem}
+  .section{padding:1.5rem 1.25rem}
+  .week-tabs{padding:1rem 1.25rem 0}
+  .week-meta{padding:1rem 1.25rem 0.5rem}
+  .days-container{padding:0 1.25rem 2rem}
+  .hero::before{font-size:8rem}
+}
+</style>
+</head>
+<body>
+
+<!-- WEEK RADIO INPUTS — must be siblings of panels -->
+<input type="radio" name="week" id="w0" class="week-radio" checked>
+<input type="radio" name="week" id="w1" class="week-radio">
+<input type="radio" name="week" id="w2" class="week-radio">
+<input type="radio" name="week" id="w3" class="week-radio">
+<input type="radio" name="week" id="w4" class="week-radio">
+<input type="radio" name="week" id="w5" class="week-radio">
+<input type="radio" name="week" id="w6" class="week-radio">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Plan d'entraînement personnalisé · Hyrox Pro Men · 1m85 · 77kg</div>
+  <div class="hero-title">ALEXANDRE PARI<br><span>BARCELONE — 15 MAI 2026</span></div>
+  <div class="hero-stats">
+    <div><div class="hero-stat-val bad">1:19:08</div><div class="hero-stat-label">Turin Pro (réf.)</div></div>
+    <div class="arrow-hero">→</div>
+    <div><div class="hero-stat-val target">≤ 1:14:00</div><div class="hero-stat-label">Objectif Barcelone</div></div>
+    <div class="divider-v"></div>
+    <div><div class="hero-stat-val" style="color:var(--blue)">−5 min</div><div class="hero-stat-label">Gain cible</div></div>
+    <div><div class="hero-stat-val" style="color:var(--purple);font-size:1.4rem">6,5 sem.</div><div class="hero-stat-label">Effectives</div></div>
+  </div>
+</div>
+
+<!-- DIAGNOSTIC -->
+<div class="section">
+  <div class="section-header"><div class="section-title">DIAGNOSTIC BRUTAL</div><div class="section-line"></div></div>
+  <div class="diag-grid">
+    <div class="diag-card red">
+      <div class="diag-card-title">🔴 RUNS — Le vrai problème</div>
+      <div class="stat-row"><span class="stat-l">Run 1 Turin (~800m)</span><span class="stat-v y">3:46 affiché ≈ 4:42/km réel</span></div>
+      <div class="stat-row"><span class="stat-l">Runs 2→7 (compromis)</span><span class="stat-v r">4:31 → 4:50/km</span></div>
+      <div class="stat-row"><span class="stat-l">Run 8 (plus long)</span><span class="stat-v r">5:36 — effondrement</span></div>
+      <div class="stat-row"><span class="stat-l">Seuil entraînement</span><span class="stat-v g">~4:00/km (8×1000m)</span></div>
+      <div class="stat-row"><span class="stat-l">Potentiel compromised</span><span class="stat-v g">4:10–4:20/km</span></div>
+      <div class="stat-row"><span class="stat-l">Gap potentiel/réalisé</span><span class="stat-v r">30–40 sec/km perdu</span></div>
+    </div>
+    <div class="diag-card red">
+      <div class="diag-card-title">🔴 STATIONS PRIORITAIRES</div>
+      <div class="stat-row"><span class="stat-l">SkiErg Turin officiel</span><span class="stat-v r">4:25 (top 89%!)</span></div>
+      <div class="stat-row"><span class="stat-l">SkiErg ergo pur</span><span class="stat-v r">~4:00–4:10 (2:00–2:05/500m)</span></div>
+      <div class="stat-row"><span class="stat-l">Problème SkiErg</span><span class="stat-v r">Bras pas assez hauts → perte amplitude</span></div>
+      <div class="stat-row"><span class="stat-l">Sled Push Turin</span><span class="stat-v r">4:26 (top 80%)</span></div>
+      <div class="stat-row"><span class="stat-l">Charge entraîn./compét.</span><span class="stat-v g">200/202kg — pas un pb de force</span></div>
+      <div class="stat-row"><span class="stat-l">Row Turin</span><span class="stat-v r">4:40 — pacing trop conservateur</span></div>
+    </div>
+    <div class="diag-card yellow">
+      <div class="diag-card-title">🟡 POINTS FORTS À MAINTENIR</div>
+      <div class="stat-row"><span class="stat-l">Sled Pull</span><span class="stat-v g">Top 44% Turin — point fort</span></div>
+      <div class="stat-row"><span class="stat-l">Burpee Broad Jump</span><span class="stat-v g">Top 38% — point fort</span></div>
+      <div class="stat-row"><span class="stat-l">Stratégie BBJ</span><span class="stat-v g">Continu, toujours en mouvement ✓</span></div>
+      <div class="stat-row"><span class="stat-l">Wall Balls</span><span class="stat-v y">5:54 (top 40%) — à optimiser</span></div>
+      <div class="stat-row"><span class="stat-l">Stratégie WB cible</span><span class="stat-v g">6–7 constant, jamais s'arrêter &gt;2s</span></div>
+      <div class="stat-row"><span class="stat-l">Farmers Carry</span><span class="stat-v g">200m unbroken ✓</span></div>
+    </div>
+  </div>
+  <div class="alert-box" style="margin-top:1rem">
+    <strong>⚡ Diagnostic #1 :</strong> Tu as le moteur (seuil 4:00/km). Le problème est 100% neuromusculaire — jambes en compote à la relance, pacing conservateur par peur d'exploser, pas de repère d'allure. Ces 3 problèmes se règlent à l'entraînement spécifique.<br><br>
+    <strong>⚡ Diagnostic #2 — SkiErg :</strong> Tu ne montes pas les bras assez haut. À 1m85, corriger ça = 15–20 secondes gratuites sur 1000m dès la première séance.<br><br>
+    <strong>⚡ Diagnostic #3 — Lunges :</strong> Pas un problème de force à froid. Résistance musculaire en état de fatigue cumulée (après 6 stations + 6 runs). Solution : toujours s'entraîner en fatigue pré-existante.
+  </div>
+</div>
+
+<!-- OBJECTIF -->
+<div class="section">
+  <div class="section-header"><div class="section-title">OBJECTIF & DÉCOMPOSITION</div><div class="section-line"></div></div>
+  <div class="detail-grid">
+    <div class="detail-block">
+      <div class="detail-block-label">Run total — gain cible</div>
+      <div class="detail-block-content">
+        Turin : <span class="load">37:44</span> → Barcelone : <strong>~34:30</strong><br>
+        Allure compromised cible : <span class="pace">4:10–4:20/km</span><br>
+        Run 8 cible : <span class="pace">4:45–5:00</span><br>
+        Gain estimé : <span class="ok">~3 min sur le total run</span>
+      </div>
+    </div>
+    <div class="detail-block">
+      <div class="detail-block-label">Stations — gain cible</div>
+      <div class="detail-block-content">
+        SkiErg : 4:25 → <strong>3:50</strong> = <span class="ok">−35s</span><br>
+        Sled Push : 4:26 → <strong>3:45</strong> = <span class="ok">−41s</span><br>
+        Row : 4:40 → <strong>4:10</strong> = <span class="ok">−30s</span><br>
+        WB : 5:54 → <strong>5:15</strong> = <span class="ok">−39s</span><br>
+        Total : <span class="ok">~2:20 gagnées</span>
+      </div>
+    </div>
+    <div class="detail-block">
+      <div class="detail-block-label">Total projeté Barcelone</div>
+      <div class="detail-block-content">
+        Turin : <span class="load">1:19:08</span><br>
+        Run : <span class="ok">−3:00</span> · Stations : <span class="ok">−2:20</span><br>
+        <strong style="font-size:1.1rem;color:var(--green)">Barcelone : ~1:13–1:14</strong><br>
+        <span style="font-size:0.75rem;color:var(--text3)">Top 25% AG 35-39 avec une bonne journée</span>
+      </div>
+    </div>
+    <div class="detail-block">
+      <div class="detail-block-label">Montre — Forerunner 265</div>
+      <div class="detail-block-content">
+        En séance : alertes allure <span class="pace">4:05/km</span> sur seuil<br>
+        En course Hyrox (intérieur) : <strong>cadence 175–180 pas/min</strong> + FC max <strong>182–183 bpm</strong><br>
+        <span style="font-size:0.75rem;color:var(--text3)">GPS infiable en intérieur → piloter à la cadence et FC</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STRATÉGIE COURSE -->
+<div class="section">
+  <div class="section-header"><div class="section-title">STRATÉGIE DE COURSE — BARCELONE</div><div class="section-line"></div></div>
+  <div class="alert-box" style="margin-bottom:1.5rem">
+    <strong>Règle #1 :</strong> Run 1 à <strong>4:05–4:10</strong>. Pas plus vite. À Turin tu es parti trop fort sur une distance courte — acide lactique immédiat, tu n'as jamais récupéré.<br>
+    <strong>Règle #2 :</strong> Chaque relance post-station — <strong>200m forcés à allure cible</strong>. Jambes brûlent, souffle court. C'est normal. Tenir 200m, la vitesse revient à 300m.<br>
+    <strong>Règle #3 :</strong> Wall Balls — <strong>séries de 6–7 d'emblée</strong>, rythme métronome, jamais s'arrêter plus de 2s. Contra-intuitif mais plus rapide que partir sur 10 et casser.
+  </div>
+  <div class="detail-block">
+    <div class="detail-block-label">Splits cibles vs Turin</div>
+    <div style="overflow-x:auto">
+      <table class="pace-table" style="min-width:480px">
+        <thead><tr><th>#</th><th>Segment</th><th>Turin</th><th>Barcelone cible</th><th>Gain</th></tr></thead>
+        <tbody>
+          <tr><td>R1</td><td>Run 1 (~800m)</td><td class="cur">3:46</td><td class="tgt">3:20–3:25</td><td class="gain">dist. courte</td></tr>
+          <tr><td>S1</td><td>SkiErg 1000m</td><td class="cur">4:25</td><td class="tgt">3:50</td><td class="gain">−35s</td></tr>
+          <tr><td>R2</td><td>Run 2</td><td class="cur">4:31</td><td class="tgt">4:15</td><td class="gain">−16s</td></tr>
+          <tr><td>S2</td><td>Sled Push 50m</td><td class="cur">4:26</td><td class="tgt">3:45</td><td class="gain">−41s</td></tr>
+          <tr><td>R3</td><td>Run 3</td><td class="cur">4:45</td><td class="tgt">4:15</td><td class="gain">−30s</td></tr>
+          <tr><td>S3</td><td>Sled Pull 50m</td><td class="cur">5:28</td><td class="tgt">4:50</td><td class="gain">−38s</td></tr>
+          <tr><td>R4</td><td>Run 4</td><td class="cur">4:47</td><td class="tgt">4:15</td><td class="gain">−32s</td></tr>
+          <tr><td>S4</td><td>BBJ 80m</td><td class="cur">3:44</td><td class="tgt">3:35</td><td class="gain">−9s</td></tr>
+          <tr><td>R5</td><td>Run 5</td><td class="cur">4:47</td><td class="tgt">4:15</td><td class="gain">−32s</td></tr>
+          <tr><td>S5</td><td>Row 1000m</td><td class="cur">4:40</td><td class="tgt">4:10</td><td class="gain">−30s</td></tr>
+          <tr><td>R6</td><td>Run 6</td><td class="cur">4:43</td><td class="tgt">4:20</td><td class="gain">−23s</td></tr>
+          <tr><td>S6</td><td>Farmers Carry 200m</td><td class="cur">2:02</td><td class="tgt">1:55</td><td class="gain">−7s</td></tr>
+          <tr><td>R7</td><td>Run 7</td><td class="cur">4:50</td><td class="tgt">4:20</td><td class="gain">−30s</td></tr>
+          <tr><td>S7</td><td>Sandbag Lunges 100m</td><td class="cur">4:55</td><td class="tgt">4:30</td><td class="gain">−25s</td></tr>
+          <tr><td>R8</td><td>Run 8 (long)</td><td class="cur">5:36</td><td class="tgt">4:45–5:00</td><td class="gain">−36–51s</td></tr>
+          <tr><td>S8</td><td>Wall Balls 100 reps</td><td class="cur">5:54</td><td class="tgt">5:15</td><td class="gain">−39s</td></tr>
+          <tr style="background:var(--s3)"><td colspan="2"><strong>TOTAL</strong></td><td class="cur"><strong>1:19:08</strong></td><td class="tgt"><strong>~1:13–1:14</strong></td><td class="gain"><strong>~5–6 min</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- WEEK TABS -->
+<div class="week-tabs">
+  <label for="w0" class="week-tab-label">S1 — 31 mars</label>
+  <label for="w1" class="week-tab-label">S2 — 7 avril</label>
+  <label for="w2" class="week-tab-label">S3 — 14 avril</label>
+  <label for="w3" class="week-tab-label">S4 — Vacances</label>
+  <label for="w4" class="week-tab-label">S5 — Repos</label>
+  <label for="w5" class="week-tab-label">S6 — 5 mai</label>
+  <label for="w6" class="week-tab-label">Race Week</label>
+</div>
+
+<!-- ═══ SEMAINE 1 ═══ -->
+<div class="week-panel" id="panel0">
+  <div class="week-meta"><span class="week-phase-badge phase-build">BUILD 1</span><div class="week-summary">31 mars – 4 avril · Réflexes compromised run · Correction SkiErg · Seuil run</div></div>
+  <div class="days-container">
+
+    <!-- LUN S1 -->
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d01">
+      <label class="toggle-label" for="d01">
+        <div class="day-date-block"><div class="day-weekday">Lun</div><div class="day-num">31</div></div>
+        <div class="day-info"><span class="day-tag tag-run">Run Seuil</span><div class="day-title">6km Z2 + 5×1000m seuil</div><div class="day-subtitle">Construction seuil lactique · 1h05</div></div>
+        <div class="day-duration">1h05</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-grid">
+          <div class="detail-block"><div class="detail-block-label">Intensité</div><div class="intensity-row"><div class="int-pip z1"></div><div class="int-pip z2"></div><div class="int-pip z3"></div><div class="int-pip"></div><div class="int-pip"></div><span class="int-label">Zone 3 — Seuil</span></div></div>
+          <div class="detail-block"><div class="detail-block-label">Allures cibles</div><div class="detail-block-content">Z2 : <span class="pace">5:00–5:30/km</span><br>1000m seuil : <span class="pace">4:00–4:05/km</span><br>Récup entre reps : <span class="pace">1:30 passif</span></div></div>
+        </div>
+        <div class="detail-block" style="margin-bottom:1rem">
+          <div class="detail-block-label">Déroulé complet</div>
+          <ul class="steps-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-body"><span class="step-badge sb-wu">Échauffement</span><strong>10 min</strong> — montées de genoux, talons-fesses, foulées bondissantes. Pas de statique à froid.</div></li>
+            <li class="step-item"><div class="step-num">2</div><div class="step-body"><span class="step-badge sb-wu">Warm-up run</span><strong>6km Zone 2</strong> — <span class="pace">5:00–5:30/km</span>. FC 130–145 bpm. Pouvoir parler en phrases complètes.</div></li>
+            <li class="step-item"><div class="step-num hl">3</div><div class="step-body"><span class="step-badge sb-main">BLOC PRINCIPAL — 5×1000m</span> @ <span class="pace">4:00–4:05/km</span>, récup <strong>1:30 passif</strong><br><span class="warn">⚠ Régularité absolue — le 5ème = même temps que le 1er. Si tu passes 4:15 sur les derniers, tu es parti trop vite.</span><br><span class="ok">✓ Ces 1000m simulent exactement la durée d'un compromised run en compétition.</span></div></li>
+            <li class="step-item"><div class="step-num">4</div><div class="step-body"><span class="step-badge sb-cd">Cool-down</span>5–10 min run très léger.</div></li>
+            <li class="step-item"><div class="step-num">5</div><div class="step-body"><span class="step-badge sb-str">Étirements 10 min</span> — ischio-jambiers assis 2×45s/jambe · quad debout 2×30s · mollets 2×45s · hanche fléchisseur fente basse 2×45s/jambe · rotation thoracique au sol 1 min.</div></li>
+          </ul>
+        </div>
+        <div class="detail-block"><div class="detail-block-label">Alerte montre Forerunner 265</div><div class="detail-block-content">Programmer alerte <span class="pace">4:05/km</span>. <strong>Objectif : ne jamais déclencher l'alerte sur les 3 premiers 1000m.</strong></div></div>
+      </div>
+    </div>
+
+    <!-- MAR S1 -->
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d02">
+      <label class="toggle-label" for="d02">
+        <div class="day-date-block"><div class="day-weekday">Mar</div><div class="day-num">1</div></div>
+        <div class="day-info"><span class="day-tag tag-hyrox">Hyrox</span><div class="day-title">SkiErg Technique + Compromised Run × 4</div><div class="day-subtitle">Réflexe relance · Correction bras hauts · 1h05</div></div>
+        <div class="day-duration">1h05</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-grid">
+          <div class="detail-block"><div class="detail-block-label">Intensité</div><div class="intensity-row"><div class="int-pip z1"></div><div class="int-pip z2"></div><div class="int-pip z3"></div><div class="int-pip z4"></div><div class="int-pip"></div><span class="int-label">Zone 4 — Effort course</span></div></div>
+          <div class="detail-block"><div class="detail-block-label">Charges & cibles</div><div class="detail-block-content">Run : <span class="pace">4:20–4:30/km</span><br>SkiErg : <span class="load">1:55–2:00/500m</span><br>Objectif SkiErg 1000m : <span class="load">3:50–4:00</span></div></div>
+        </div>
+        <div class="detail-block" style="margin-bottom:1rem">
+          <div class="detail-block-label">⭐ Correction technique SkiErg — À appliquer dès aujourd'hui</div>
+          <div class="detail-block-content">
+            <span class="warn">Problème identifié : tu ne montes pas les bras assez haut → perte d'amplitude → moins de puissance.</span><br><br>
+            <strong>Position correcte :</strong><br>
+            1. Pieds écartés largeur hanches, genoux légèrement fléchis<br>
+            2. <strong>Bras TENDUS au-dessus de la tête, mains au maximum de hauteur</strong> — c'est l'élan<br>
+            3. Flexion simultanée du buste + tirage des bras vers le bas en arc<br>
+            4. Finir mains aux hanches/cuisses, buste penché avant<br>
+            5. Remonter bras tendus (pas fléchis) pour récupérer l'élan<br><br>
+            <span class="ok">✓ Faire 3×10 coups LENTS avant de commencer pour ancrer le mouvement.</span><br>
+            <span class="ok">✓ À 1m85, tu as plus d'amplitude que tout le monde. C'est un avantage, pas un handicap.</span>
+          </div>
+        </div>
+        <div class="detail-block" style="margin-bottom:1rem">
+          <div class="detail-block-label">Déroulé — 4 rounds</div>
+          <ul class="steps-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-body"><span class="step-badge sb-wu">Échauffement</span>10 min run léger + 5 min mobilité épaules (cercles bras tendus) + 3×10 coups SkiErg lents (focus amplitude max).</div></li>
+            <li class="step-item"><div class="step-num hl">2</div><div class="step-body"><span class="step-badge sb-main">4 rounds</span> : <strong>1km run <span class="pace">(4:20–4:30)</span> → SkiErg 1000m <span class="load">(1:55–2:00/500m)</span> → 1km run</strong><br><br>
+            <span class="warn">⚠ CLEF : à la sortie du SkiErg, RELANCE FORCÉE. Les 200 premiers mètres à allure cible même si les jambes refusent. Ne pas trottiner. C'est exactement ce qu'on entraîne.</span><br>
+            Récup entre rounds : <strong>3 min marche active</strong><br>
+            <span class="ok">✓ Noter les temps par round — doit progresser semaine après semaine</span></div></li>
+            <li class="step-item"><div class="step-num">3</div><div class="step-body"><span class="step-badge sb-cd">Cool-down</span>5 min très léger.</div></li>
+            <li class="step-item"><div class="step-num">4</div><div class="step-body"><span class="step-badge sb-str">Étirements</span>Épaules 2×30s/côté · triceps 2×30s · dorsaux position enfant 1 min · ischio 2×45s/jambe · mollets 2×45s.</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- MER S1 -->
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d03">
+      <label class="toggle-label" for="d03">
+        <div class="day-date-block"><div class="day-weekday">Mer</div><div class="day-num">2</div></div>
+        <div class="day-info"><span class="day-tag tag-renfo">Renfo</span><div class="day-title">Force fonctionnelle — Lower body + SkiErg puissance</div><div class="day-subtitle">Chaînes postérieures · Sled · Wall Balls · 58 min</div></div>
+        <div class="day-duration">58 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-grid">
+          <div class="detail-block"><div class="detail-block-label">Intensité</div><div class="intensity-row"><div class="int-pip z1"></div><div class="int-pip z2"></div><div class="int-pip z3"></div><div class="int-pip"></div><div class="int-pip"></div><span class="int-label">Zone 2–3 — Renfo modéré</span></div></div>
+          <div class="detail-block"><div class="detail-block-label">Matériel</div><div class="detail-block-content">Kettlebell / haltères · SkiErg · Wall Ball 9kg · Sled (optionnel)</div></div>
+        </div>
+        <div class="detail-block" style="margin-bottom:1rem">
+          <div class="detail-block-label">Programme complet</div>
+          <ul class="steps-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-body"><span class="step-badge sb-wu">Échauffement</span>5 min vélo léger + cercles hanches ×10 chaque sens + squat PdC ×15 + fentes ×10/jambe.</div></li>
+            <li class="step-item"><div class="step-num hl">2</div><div class="step-body"><span class="step-badge sb-main">Squat gobelet</span> <span class="load">4×12 @ 32kg</span> — descendre sous 90°, genoux dans l'axe. Récup 90s.</div></li>
+            <li class="step-item"><div class="step-num hl">3</div><div class="step-body"><span class="step-badge sb-main">Romanian Deadlift</span> <span class="load">4×10 @ 80–90kg</span> — dos droit, ischio-jambiers étirés. Récup 90s.<br><em style="color:var(--text3);font-size:0.78rem">Base DL 150kg → 80–90kg = ~57% = résistance, pas force max.</em></div></li>
+            <li class="step-item"><div class="step-num hl">4</div><div class="step-body"><span class="step-badge sb-main">Hip Thrust</span> <span class="load">4×12 @ 100kg</span> — contracter fessiers en haut, maintien 1s. Récup 90s. <em style="color:var(--text3);font-size:0.78rem">Force fessière = Sled Push.</em></div></li>
+            <li class="step-item"><div class="step-num hl">5</div><div class="step-body"><span class="step-badge sb-main">Farmers Carry lourd</span> <span class="load">4×40m @ 2×36kg</span> (légèrement au-dessus compét). Dos droit, épaules basses, unbroken obligatoire. Récup 2 min.</div></li>
+            <li class="step-item"><div class="step-num hl">6</div><div class="step-body"><span class="step-badge sb-main">Wall Balls</span> <span class="load">4×15 @ 9kg</span> — allure compétition, zéro break dans la série. Récup 90s. <span class="ok">Mémoriser ce rythme : c'est ton rythme de course.</span></div></li>
+            <li class="step-item"><div class="step-num hl">7</div><div class="step-body"><span class="step-badge sb-main">SkiErg puissance</span> <span class="load">4×200m à fond</span> — bras hauts, nouvelle technique. Viser <span class="load">&lt;1:45/500m</span>. Récup 90s.</div></li>
+            <li class="step-item"><div class="step-num">8</div><div class="step-body"><span class="step-badge sb-str">Étirements 10 min</span> — fléchisseurs hanches 1 min/jambe · quad 45s/jambe · dorsaux position enfant 1 min · épaules · rotation thoracique.</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- JEU S1 -->
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d04">
+      <label class="toggle-label" for="d04">
+        <div class="day-date-block"><div class="day-weekday">Jeu</div><div class="day-num">3</div></div>
+        <div class="day-info"><span class="day-tag tag-vitesse">Vitesse</span><div class="day-title">2 × (7×400m) — Départ toutes les 3 min</div><div class="day-subtitle">VMA · Vitesse de base · 65 min</div></div>
+        <div class="day-duration">65 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-grid">
+          <div class="detail-block"><div class="detail-block-label">Intensité</div><div class="intensity-row"><div class="int-pip z1"></div><div class="int-pip z2"></div><div class="int-pip z3"></div><div class="int-pip z4"></div><div class="int-pip z5"></div><span class="int-label">Zone 5 — VMA</span></div></div>
+          <div class="detail-block"><div class="detail-block-label">Allures cibles</div><div class="detail-block-content">400m : <span class="pace">1:16–1:19</span> (3:10–3:17/km)<br>Récup : départ toutes les <span class="pace">3:00</span><br>Inter-blocs : <span class="pace">5 min marche</span></div></div>
+        </div>
+        <div class="detail-block" style="margin-bottom:1rem">
+          <div class="detail-block-label">Déroulé</div>
+          <ul class="steps-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-body"><span class="step-badge sb-wu">Échauffement</span>15 min progressif (5:30→5:00→4:30) + 4×100m accélérations + étirements dynamiques (cercles hanches, fentes marchées, jambes balancier).</div></li>
+            <li class="step-item"><div class="step-num hl">2</div><div class="step-body"><span class="step-badge sb-main">Bloc 1 — 7×400m</span> départ toutes les 3:00 · <span class="pace">1:17–1:20</span><br><span class="warn">⚠ Ne pas claquer les premiers. Le 7ème doit être à la même allure que le 1er.</span></div></li>
+            <li class="step-item"><div class="step-num">3</div><div class="step-body"><span class="step-badge sb-cd">Récup inter-blocs</span>5 min marche active.</div></li>
+            <li class="step-item"><div class="step-num hl">4</div><div class="step-body"><span class="step-badge sb-main">Bloc 2 — 7×400m</span> départ toutes les 3:00 · <span class="pace">1:17–1:21</span><br><span class="warn">⚠ 400m 5, 6, 7 = les plus importants. Ne pas lâcher.</span></div></li>
+            <li class="step-item"><div class="step-num">5</div><div class="step-body"><span class="step-badge sb-cd">Cool-down</span>10 min très léger.</div></li>
+            <li class="step-item"><div class="step-num">6</div><div class="step-body"><span class="step-badge sb-str">Étirements</span>Mollets 2×60s · ischio 2×45s/jambe · psoas fente basse 2×45s/jambe · rotation spinale 1 min.</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- VEN S1 -->
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d05">
+      <label class="toggle-label" for="d05">
+        <div class="day-date-block"><div class="day-weekday">Ven</div><div class="day-num">4</div></div>
+        <div class="day-info"><span class="day-tag tag-run">Run Z2</span><div class="day-title">Zone 2 — Récupération active</div><div class="day-subtitle">Endurance fondamentale · 1h05</div></div>
+        <div class="day-duration">1h05</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Instructions</div><div class="detail-block-content">Run Zone 2 strict · <span class="pace">5:00–5:30/km</span> · FC 130–145 bpm. Jambes probablement lourdes après les 400m de jeudi — normal, rester en bas de la fourchette.<br><br><strong>Ne pas chercher la performance.</strong> Z2 = conversation possible en phrases complètes.<br><br><span class="step-badge sb-str">Étirements</span> 10 min post-run.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ SEMAINE 2 ═══ -->
+<div class="week-panel" id="panel1">
+  <div class="week-meta"><span class="week-phase-badge phase-build">BUILD 1 — SUITE</span><div class="week-summary">7 – 11 avril · Lundi férié Pâques · Sled Push/Pull + compromised · 8×1000m</div></div>
+  <div class="days-container">
+
+    <div class="day-card ferie">
+      <input type="checkbox" class="toggle" id="d10">
+      <label class="toggle-label" for="d10">
+        <div class="day-date-block"><div class="day-weekday">Lun</div><div class="day-num">7</div></div>
+        <div class="day-info"><span class="day-tag tag-rest">Férié</span><div class="day-title">Lundi de Pâques — REPOS</div><div class="day-subtitle">Jour férié · Récupération complète</div></div>
+        <div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content"><div class="detail-block"><div class="detail-block-label">Consignes</div><div class="detail-block-content">Repos complet. Famille, marche, mobilité passive — rien d'intense. Ne pas compenser.</div></div></div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d11">
+      <label class="toggle-label" for="d11">
+        <div class="day-date-block"><div class="day-weekday">Mar</div><div class="day-num">8</div></div>
+        <div class="day-info"><span class="day-tag tag-hyrox">Hyrox</span><div class="day-title">Sled Push + Pull + Compromised Run × 4</div><div class="day-subtitle">Force Sled + réflexe relance · 65 min</div></div>
+        <div class="day-duration">1h05</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-grid">
+          <div class="detail-block"><div class="detail-block-label">Charges</div><div class="detail-block-content">Sled Push : <span class="load">200kg</span> (vs 202kg compét)<br>Sled Pull : <span class="load">150–153kg</span><br>Run : <span class="pace">4:20–4:25/km</span></div></div>
+          <div class="detail-block"><div class="detail-block-label">Technique demi-tours Sled</div><div class="detail-block-content">Pas d'arrêt complet. Pivot rapide, garder la tension. Repartir <strong>immédiatement</strong>. Chaque demi-tour = temps donné aux autres.</div></div>
+        </div>
+        <div class="detail-block" style="margin-bottom:1rem">
+          <div class="detail-block-label">Déroulé</div>
+          <ul class="steps-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-body"><span class="step-badge sb-wu">Échauffement</span>10 min run léger + mobilité hanches + 2×12,5m Sled léger (120kg) pour activer.</div></li>
+            <li class="step-item"><div class="step-num hl">2</div><div class="step-body"><span class="step-badge sb-main">4 rounds</span> : <strong>1km run <span class="pace">(4:20–4:25)</span> → Sled Push 4×12,5m <span class="load">(200kg)</span> → RELANCE DIRECTE 1km run</strong><br><span class="warn">⚠ Relance post-Sled Push = moment le plus difficile. Jambes brûlent. C'est exactement ce qu'on entraîne. 200m forcés à allure cible.</span><br>Récup : 3 min entre rounds.</div></li>
+            <li class="step-item"><div class="step-num hl">3</div><div class="step-body"><span class="step-badge sb-main">2 rounds bonus si énergie</span> : <strong>1km run → Sled Pull 4×12,5m <span class="load">(150kg)</span> → 1km run</strong></div></li>
+            <li class="step-item"><div class="step-num">4</div><div class="step-body"><span class="step-badge sb-str">Étirements</span>Fléchisseurs hanches 2×60s/jambe · ischio · mollets · dorsaux bas.</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d12">
+      <label class="toggle-label" for="d12">
+        <div class="day-date-block"><div class="day-weekday">Mer</div><div class="day-num">9</div></div>
+        <div class="day-info"><span class="day-tag tag-renfo">Renfo</span><div class="day-title">Lower Body + Row + Lunges en fatigue</div><div class="day-subtitle">Résistance musculaire cumulée · 55 min</div></div>
+        <div class="day-duration">55 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block" style="margin-bottom:1rem">
+          <div class="detail-block-label">Programme</div>
+          <ul class="steps-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-body"><span class="step-badge sb-wu">Échauffement</span>5 min vélo + mobilité.</div></li>
+            <li class="step-item"><div class="step-num hl">2</div><div class="step-body"><span class="step-badge sb-main">Bulgarian Split Squat</span> <span class="load">4×10/jambe @ 2×24kg</span> — pied arrière surélevé. Récup 90s. Force unilatérale = stabilité en course.</div></li>
+            <li class="step-item"><div class="step-num hl">3</div><div class="step-body"><span class="step-badge sb-main">Step-ups chargés</span> <span class="load">3×12/jambe @ 2×20kg</span> — step 50–60cm, descente contrôlée. Récup 90s.</div></li>
+            <li class="step-item"><div class="step-num hl">4</div><div class="step-body"><span class="step-badge sb-main">Row ergomètre</span> <span class="load">3×500m @ allure course</span> — viser <span class="load">1:52–1:57/500m</span>. Même réglage dumper qu'en compét. Récup 2 min.</div></li>
+            <li class="step-item"><div class="step-num hl">5</div><div class="step-body"><span class="step-badge sb-key">Sandbag Lunges EN FATIGUE</span> <span class="load">3×20m @ 30kg</span> — directement après le Row, sans récup.<br><span class="warn">⚠ C'est exactement la situation en course : Lunges après Row épuisant.</span> Récup 3 min entre les 3 séries.</div></li>
+            <li class="step-item"><div class="step-num">6</div><div class="step-body"><span class="step-badge sb-str">Étirements</span>Quad · ischio · mollets · fléchisseurs hanches · dorsaux.</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d13">
+      <label class="toggle-label" for="d13">
+        <div class="day-date-block"><div class="day-weekday">Jeu</div><div class="day-num">10</div></div>
+        <div class="day-info"><span class="day-tag tag-vitesse">Vitesse</span><div class="day-title">8×1000m avec 1'30 récup passive</div><div class="day-subtitle">Simulation compromised run × 8 · 68 min</div></div>
+        <div class="day-duration">68 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-grid">
+          <div class="detail-block"><div class="detail-block-label">Intensité</div><div class="intensity-row"><div class="int-pip z1"></div><div class="int-pip z2"></div><div class="int-pip z3"></div><div class="int-pip z4"></div><div class="int-pip z5"></div><span class="int-label">Zone 4–5</span></div></div>
+          <div class="detail-block"><div class="detail-block-label">Allure cible</div><div class="detail-block-content">1000m : <span class="pace">4:00–4:05/km</span><br>Récup : <span class="pace">1:30 passif</span></div></div>
+        </div>
+        <div class="detail-block" style="margin-bottom:1rem">
+          <div class="detail-block-label">Déroulé + consignes mentales</div>
+          <ul class="steps-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-body"><span class="step-badge sb-wu">Échauffement</span>15 min progressif + 4 accélérations 80m.</div></li>
+            <li class="step-item"><div class="step-num hl">2</div><div class="step-body"><span class="step-badge sb-main">8×1000m @ 4:00–4:05</span> — récup 1:30 passif<br><br>
+            Reps 1–3 : facile, <strong>retenir</strong>. Tu veux aller plus vite. Ne pas écouter.<br>
+            Reps 4–6 : ça commence à faire mal. C'est là que se construit l'adaptation.<br>
+            <span class="ok">Reps 7–8 : les plus importantes. Finir les 8 à allure = victoire.</span></div></li>
+            <li class="step-item"><div class="step-num">3</div><div class="step-body"><span class="step-badge sb-cd">Cool-down</span>10 min 5:30+/km.</div></li>
+            <li class="step-item"><div class="step-num">4</div><div class="step-body"><span class="step-badge sb-str">Étirements</span>10 min.</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d14">
+      <label class="toggle-label" for="d14">
+        <div class="day-date-block"><div class="day-weekday">Ven</div><div class="day-num">11</div></div>
+        <div class="day-info"><span class="day-tag tag-run">Run Z2</span><div class="day-title">Zone 2 long</div><div class="day-subtitle">Volume aérobie · 1h15–1h30</div></div>
+        <div class="day-duration">1h20</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Instructions</div><div class="detail-block-content">Run Z2 <span class="pace">5:00–5:30/km</span>. Jambes lourdes après les 8×1000m de jeudi = normal. Rester en Z2 strict.<br><br><span class="step-badge sb-str">Étirements</span> 10 min post-run.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ SEMAINE 3 ═══ -->
+<div class="week-panel" id="panel2">
+  <div class="week-meta"><span class="week-phase-badge phase-peak">BUILD 2 — PEAK</span><div class="week-summary">14 – 18 avril · Charge maximale · Simulation complète mardi · Dernier bloc avant vacances</div></div>
+  <div class="days-container">
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d20">
+      <label class="toggle-label" for="d20">
+        <div class="day-date-block"><div class="day-weekday">Lun</div><div class="day-num">14</div></div>
+        <div class="day-info"><span class="day-tag tag-run">Run Seuil</span><div class="day-title">6km Z2 + 6×1000m + 2km tempo</div><div class="day-subtitle">Séance seuil maximale avant vacances · 1h15</div></div>
+        <div class="day-duration">1h15</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block" style="margin-bottom:1rem">
+          <div class="detail-block-label">Déroulé</div>
+          <ul class="steps-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-body"><span class="step-badge sb-wu">Échauffement</span>10 min dynamique.</div></li>
+            <li class="step-item"><div class="step-num">2</div><div class="step-body">6km Zone 2 <span class="pace">(5:00–5:20/km)</span></div></li>
+            <li class="step-item"><div class="step-num hl">3</div><div class="step-body"><span class="step-badge sb-main">6×1000m @ 4:00–4:05</span> — récup 1:30. Volume +1 rep vs S1 = progression mesurable.</div></li>
+            <li class="step-item"><div class="step-num hl">4</div><div class="step-body"><span class="step-badge sb-key">2km tempo @ 4:10–4:15/km</span> — enchaîné DIRECT après le 6ème 1000m, sans récup.<br><span class="warn">⚠ C'est inconfortable. C'est le but. Simuler la fin de course.</span></div></li>
+            <li class="step-item"><div class="step-num">5</div><div class="step-body"><span class="step-badge sb-cd">Cool-down</span>5 min + <span class="step-badge sb-str">étirements</span> 10 min.</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d21">
+      <label class="toggle-label" for="d21">
+        <div class="day-date-block"><div class="day-weekday">Mar</div><div class="day-num">15</div></div>
+        <div class="day-info"><span class="day-tag tag-hyrox">Hyrox</span><div class="day-title">⭐ SIMULATION COMPLÈTE — 5 stations + 6 runs</div><div class="day-subtitle">Baseline avant Barcelone · Tout enchaîné · 85 min</div></div>
+        <div class="day-duration">85 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="alert-box" style="margin-bottom:1rem"><strong>C'est LA séance clé de la préparation.</strong> Pas de gestion — courir comme en course. Noter chaque split. Cette séance est ta baseline.</div>
+        <div class="detail-block" style="margin-bottom:1rem">
+          <div class="detail-block-label">Protocole simulation — Tout enchaîné sans pause</div>
+          <ul class="steps-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-body"><span class="step-badge sb-wu">Échauffement</span>15 min run progressif + mobilité complète.</div></li>
+            <li class="step-item"><div class="step-num hl">2</div><div class="step-body"><span class="step-badge sb-main">SIMULATION</span><br><br>
+            R1 : 1km run <span class="pace">(4:05–4:10)</span><br>
+            S1 : SkiErg 1000m <span class="load">(bras hauts, 1:55/500m)</span><br>
+            R2 : 1km run <span class="pace">(relance forcée → 4:15–4:20)</span><br>
+            S2 : Sled Push 4×12,5m <span class="load">(200kg)</span><br>
+            R3 : 1km run <span class="pace">(relance forcée → 4:15–4:20)</span><br>
+            S3 : Sled Pull 4×12,5m <span class="load">(150kg)</span><br>
+            R4 : 1km run <span class="pace">(relance forcée)</span><br>
+            S4 : BBJ 80m (continu, en mouvement permanent)<br>
+            R5 : 1km run <span class="pace">(tenir l'allure)</span><br>
+            S5 : Row 1000m <span class="load">(1:52–1:57/500m)</span><br>
+            R6 : 1km run (tout donner)</div></li>
+            <li class="step-item"><div class="step-num">3</div><div class="step-body"><span class="step-badge sb-cd">Cool-down</span>10 min marche + <span class="step-badge sb-str">étirements</span> 15 min.</div></li>
+          </ul>
+        </div>
+        <div class="detail-block"><div class="detail-block-label">À noter absolument</div><div class="detail-block-content">Temps par run · temps par station · ressenti relance 1–10. Référence de comparaison pour Barcelone.</div></div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d22">
+      <label class="toggle-label" for="d22">
+        <div class="day-date-block"><div class="day-weekday">Mer</div><div class="day-num">16</div></div>
+        <div class="day-info"><span class="day-tag tag-renfo">Renfo</span><div class="day-title">Renfo léger — récupération active post-simulation</div><div class="day-subtitle">Mobilité · Charges modérées · 40 min</div></div>
+        <div class="day-duration">40 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Programme</div><div class="detail-block-content">Squat gobelet <span class="load">3×10 @ 24kg</span> · Hip thrusts <span class="load">3×12 @ 80kg</span> · Farmers carry <span class="load">2×40m @ 2×32kg</span> · Gainage 3×45s · Mobilité hanches/épaules 10 min.<br><br><span class="warn">Pas de charge maximale. Objectif : bouger, pas progresser.</span></div></div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d23">
+      <label class="toggle-label" for="d23">
+        <div class="day-date-block"><div class="day-weekday">Jeu</div><div class="day-num">17</div></div>
+        <div class="day-info"><span class="day-tag tag-vitesse">Vitesse</span><div class="day-title">2 × (5×400m) — Volume réduit avant vacances</div><div class="day-subtitle">Maintien vitesse · 50 min</div></div>
+        <div class="day-duration">50 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Consignes</div><div class="detail-block-content">Échauffement 15 min. 2 blocs de 5×400m (vs 7 habituellement) — volume réduit car simulation mardi + vacances approchent.<br><br>Allure : <span class="pace">1:16–1:19</span>. Récup : départ toutes les 3 min. Inter-blocs : 4 min.<br><br>Cool-down 10 min + étirements.</div></div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d24">
+      <label class="toggle-label" for="d24">
+        <div class="day-date-block"><div class="day-weekday">Ven</div><div class="day-num">18</div></div>
+        <div class="day-info"><span class="day-tag tag-run">Run Z2</span><div class="day-title">Zone 2 + 4 strides — Dernière séance avant vacances</div><div class="day-subtitle">Arriver en vacances frais · 52 min</div></div>
+        <div class="day-duration">52 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Instructions</div><div class="detail-block-content">45 min Z2 <span class="pace">(5:00–5:20/km)</span>. Sur les 10 dernières min : 4×100m d'accélérations progressives (pas de sprint).<br><br><strong>Objectif :</strong> arriver en vacances frais, pas cramé. Ne pas faire le plein — contre-productif.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ SEMAINE 4 — VACANCES ═══ -->
+<div class="week-panel" id="panel3">
+  <div class="week-meta"><span class="week-phase-badge phase-vac">VACANCES — Gym limité</span><div class="week-summary">21 – 28 avril · 2 runs Z2 minimum · Bodyweight · Ne pas culpabiliser</div></div>
+  <div class="days-container">
+    <div class="day-card vac">
+      <input type="checkbox" class="toggle" id="d30">
+      <label class="toggle-label" for="d30">
+        <div class="day-date-block"><div class="day-weekday">Sem.</div><div class="day-num" style="font-size:1rem">21–28</div></div>
+        <div class="day-info"><span class="day-tag tag-rest">Vacances</span><div class="day-title">Programme vacances — Accès gym limité</div><div class="day-subtitle">Maintien cardio + bodyweight sur 7 jours</div></div>
+        <div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="alert-box" style="margin-bottom:1rem"><strong>Message important :</strong> Une semaine de vacances ne détruit pas 6 semaines de préparation. Le minimum vital ci-dessous suffit à maintenir la condition.</div>
+        <div class="detail-grid">
+          <div class="detail-block"><div class="detail-block-label">2× dans la semaine — Run Z2 (priorité #1)</div><div class="detail-block-content">40–50 min Zone 2 · <span class="pace">5:00–5:30/km</span>. Sur tapis si c'est tout ce qui est dispo.<br><br><span class="ok">✓ Sur l'un des 2 runs : 4×30s d'accélérations en fin pour garder les jambes réactives.</span></div></div>
+          <div class="detail-block"><div class="detail-block-label">2× dans la semaine — Bodyweight circuit</div><div class="detail-block-content"><strong>Circuit × 3 rounds :</strong><br>Squats sautés ×20 · Fentes marchées ×20 · Pompes ×15 · <strong>Burpee Broad Jump ×10</strong> (garder le pattern moteur) · Gainage 45s · Mountain climbers ×20<br>Récup 2 min entre rounds · ~35 min</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SEMAINE 5 — REPOS ═══ -->
+<div class="week-panel" id="panel4">
+  <div class="week-meta"><span class="week-phase-badge phase-vac">REPOS FORCÉ</span><div class="week-summary">30 avril – 3 mai · Impossible de faire du sport · Super-compensation passive</div></div>
+  <div class="days-container">
+    <div class="day-card vac">
+      <input type="checkbox" class="toggle" id="d40">
+      <label class="toggle-label" for="d40">
+        <div class="day-date-block"><div class="day-weekday">30/04</div><div class="day-num" style="font-size:1rem">—03/05</div></div>
+        <div class="day-info"><span class="day-tag tag-rest">Repos</span><div class="day-title">Repos complet ou footing très léger</div><div class="day-subtitle">Super-compensation · Récupération profonde</div></div>
+        <div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Consignes</div><div class="detail-block-content">Si possible : 1–2 footings de 20–30 min, allure conversationnelle <span class="pace">(5:30–6:00/km)</span>. Sinon : marche, mobilité, stretching.<br><br><span class="ok">✓ Super-compensation : après charge importante + repos, le corps revient plus fort qu'avant. Ce n'est pas du temps perdu.</span><br><br><strong>Priorités :</strong> dormir 7–8h · protéines 1,8g/kg (~138g/jour) · hydratation · éviter l'alcool excessif.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SEMAINE 6 — TAPER ═══ -->
+<div class="week-panel" id="panel5">
+  <div class="week-meta"><span class="week-phase-badge phase-taper">REPRISE + TAPER</span><div class="week-summary">5 – 9 mai · Reprise douce · Volume −40% · Intensité maintenue · Rappels neuromusculaires</div></div>
+  <div class="days-container">
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d50">
+      <label class="toggle-label" for="d50">
+        <div class="day-date-block"><div class="day-weekday">Lun</div><div class="day-num">5</div></div>
+        <div class="day-info"><span class="day-tag tag-run">Run Z2</span><div class="day-title">Reprise en douceur — Z2 strict</div><div class="day-subtitle">Réveil cardiovasculaire · 48 min</div></div>
+        <div class="day-duration">48 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Instructions — Important</div><div class="detail-block-content">Run Z2 <span class="pace">5:00–5:30/km</span>. Jambes lourdes = normal après le repos. Ne pas paniquer ni accélérer pour compenser.<br><br><span class="warn">⚠ Résister à l'envie de taper fort pour rattraper. C'est le piège classique du taper — ça détruit le bénéfice de la récupération.</span></div></div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d51">
+      <label class="toggle-label" for="d51">
+        <div class="day-date-block"><div class="day-weekday">Mar</div><div class="day-num">6</div></div>
+        <div class="day-info"><span class="day-tag tag-hyrox">Hyrox</span><div class="day-title">Rappel stations — Volume −40%</div><div class="day-subtitle">Réactivation neuromusculaire · 58 min</div></div>
+        <div class="day-duration">58 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block" style="margin-bottom:1rem">
+          <div class="detail-block-label">Programme rappel</div>
+          <ul class="steps-list">
+            <li class="step-item"><div class="step-num">1</div><div class="step-body"><span class="step-badge sb-wu">Échauffement</span>10 min run léger.</div></li>
+            <li class="step-item"><div class="step-num hl">2</div><div class="step-body"><span class="step-badge sb-main">3 rounds</span> : 1km run <span class="pace">(4:15–4:20)</span> → SkiErg 500m <span class="load">(bras hauts)</span> → 1km run. Récup 3 min. Volume réduit, intensité course.</div></li>
+            <li class="step-item"><div class="step-num hl">3</div><div class="step-body"><span class="step-badge sb-main">Rappels stations</span> : Sled Push 2×12,5m <span class="load">(200kg)</span> · Row 2×300m <span class="load">(allure course)</span> · Wall Balls <span class="load">3×12 @ 9kg</span> (rythme cible 6–7).</div></li>
+            <li class="step-item"><div class="step-num">4</div><div class="step-body"><span class="step-badge sb-str">Étirements</span>10 min.</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d52">
+      <label class="toggle-label" for="d52">
+        <div class="day-date-block"><div class="day-weekday">Mer</div><div class="day-num">7</div></div>
+        <div class="day-info"><span class="day-tag tag-renfo">Renfo</span><div class="day-title">Activation musculaire légère</div><div class="day-subtitle">Charges 60–70% · 38 min</div></div>
+        <div class="day-duration">38 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Programme</div><div class="detail-block-content">Squat gobelet <span class="load">3×8 @ 24kg</span> · Hip thrusts <span class="load">3×10 @ 80kg</span> · Farmers carry <span class="load">2×30m @ 2×28kg</span> · Gainage 3×30s · Mobilité 10 min.<br><br><strong>Charges à 60–70% du max habituel. Zéro DOMS = objectif.</strong></div></div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d53">
+      <label class="toggle-label" for="d53">
+        <div class="day-date-block"><div class="day-weekday">Jeu</div><div class="day-num">8</div></div>
+        <div class="day-info"><span class="day-tag tag-vitesse">Vitesse</span><div class="day-title">4×400m — Rappel vitesse uniquement</div><div class="day-subtitle">Réactivation neuromusculaire · 38 min</div></div>
+        <div class="day-duration">38 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Consignes strictes</div><div class="detail-block-content">Échauffement 15 min. <strong>SEULEMENT 4×400m</strong> à <span class="pace">1:15–1:18</span>. Récup 3 min. Cool-down 10 min.<br><br><span class="warn">⚠ S'ARRÊTER à 4. Même si les jambes répondent bien. Même si tu veux en faire plus. Le taper est sacré.</span></div></div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d54">
+      <label class="toggle-label" for="d54">
+        <div class="day-date-block"><div class="day-weekday">Ven</div><div class="day-num">9</div></div>
+        <div class="day-info"><span class="day-tag tag-run">Run Z2</span><div class="day-title">Zone 2 + strides — Dernière sortie aérobie</div><div class="day-subtitle">48 min</div></div>
+        <div class="day-duration">48 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Instructions</div><div class="detail-block-content">45 min Z2 <span class="pace">(5:00–5:20/km)</span>. Sur les 10 dernières min : 4×15s de strides (accélérations progressives, pas des sprints).<br><br>Profiter de cette sortie pour <strong>visualiser la course</strong> : Run 1 contrôlé → SkiErg bras hauts → relances décisives → Run 8 tenu.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ RACE WEEK ═══ -->
+<div class="week-panel" id="panel6">
+  <div class="week-meta"><span class="week-phase-badge phase-race">RACE WEEK</span><div class="week-summary">12 – 15 mai · Activation pure · Repos mercredi · Départ vendredi 19h00</div></div>
+  <div class="days-container">
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d60">
+      <label class="toggle-label" for="d60">
+        <div class="day-date-block"><div class="day-weekday">Lun</div><div class="day-num">12</div></div>
+        <div class="day-info"><span class="day-tag tag-taper">Activation</span><div class="day-title">Run léger + accélérations</div><div class="day-subtitle">33 min · Corps en mouvement</div></div>
+        <div class="day-duration">33 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Instructions</div><div class="detail-block-content">30 min run facile <span class="pace">(5:20–5:40/km)</span>. Sur les 10 dernières min : 3×20s d'accélérations progressives. Corps en mouvement, zéro effort.<br><br>Si tu te sens très lourd : 20 min marche rapide suffit. <strong>Priorité : sommeil.</strong></div></div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <input type="checkbox" class="toggle" id="d61">
+      <label class="toggle-label" for="d61">
+        <div class="day-date-block"><div class="day-weekday">Mar</div><div class="day-num">13</div></div>
+        <div class="day-info"><span class="day-tag tag-taper">Activation</span><div class="day-title">Activation stations — 2 passages max par station</div><div class="day-subtitle">Rappel neuromusculaire pur · 32 min</div></div>
+        <div class="day-duration">32 min</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Programme d'activation</div><div class="detail-block-content">10 min run léger. Puis :<br>SkiErg <span class="load">2×200m</span> allure course · Row <span class="load">2×200m</span> · Wall Balls <span class="load">2×8</span> (rythme cible) · BBJ <span class="load">2×5</span> · Sled Push <span class="load">1 aller-retour @ 150kg</span>.<br>5 min run léger final.<br><br><span class="warn">⚠ 2 passages max par station. RÉSISTER à l'envie d'en faire plus.</span><br><br>Les mouvements doivent se sentir <span class="ok">fluides et faciles</span>. Si c'est le cas : tu es prêt.</div></div>
+      </div>
+    </div>
+
+    <div class="day-card rest">
+      <input type="checkbox" class="toggle" id="d62">
+      <label class="toggle-label" for="d62">
+        <div class="day-date-block"><div class="day-weekday">Mer</div><div class="day-num">14</div></div>
+        <div class="day-info"><span class="day-tag tag-rest">Repos</span><div class="day-title">REPOS COMPLET — Veille de course</div><div class="day-subtitle">Zéro sport · Préparation mentale · Sommeil</div></div>
+        <div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="detail-block"><div class="detail-block-label">Protocole veille de course</div><div class="detail-block-content"><strong>Zéro sport.</strong><br><br><strong>Nutrition :</strong> glucides complexes le soir (pâtes, riz). Pas d'alcool. Hydratation ++.<br><strong>Sommeil :</strong> coucher à 22h max, objectif 7–8h. La nuit avant la course est souvent mauvaise — <strong>cette nuit-là est cruciale</strong>.<br><strong>Matériel :</strong> sac race prêt, tenue vérifiée, horaires notés.<br><strong>Visualisation :</strong> Run 1 à 4:10 contrôlé → SkiErg bras hauts → relance forcée 200m → Run 8 tenu jusqu'au bout.</div></div>
+      </div>
+    </div>
+
+    <div class="day-card race-day">
+      <input type="checkbox" class="toggle" id="d63">
+      <label class="toggle-label" for="d63">
+        <div class="day-date-block"><div class="day-weekday">Jeu</div><div class="day-num">15</div></div>
+        <div class="day-info"><span class="day-tag tag-race">RACE DAY</span><div class="day-title">🏆 HYROX BARCELONE — 19h00</div><div class="day-subtitle">Pro Men · Objectif ≤ 1:14:00 · Tout s'est construit pour ça</div></div>
+        <div class="day-duration">Départ 19h</div><div class="chevron">▼</div>
+      </label>
+      <div class="toggle-content">
+        <div class="alert-box" style="margin-bottom:1.5rem"><strong>Le jour J. Tu as fait le travail. Maintenant exécute le plan.</strong></div>
+        <div class="detail-grid">
+          <div class="detail-block"><div class="detail-block-label">Protocole jour de course</div><div class="detail-block-content"><strong>Matin :</strong> petit déj glucides, léger. Zéro expérimentation.<br><strong>J−3h :</strong> dernier repas (riz, poulet).<br><strong>J−25 min :</strong> 20–25 min échauffement run + mobilité + 2 accélérations.<br><strong>J−5 min :</strong> concentration, respiration, visualisation.</div></div>
+          <div class="detail-block"><div class="detail-block-label">Les 3 règles absolues</div><div class="detail-block-content"><span class="warn">1. Run 1 : 4:05–4:10. Pas plus vite.</span><br><br><span class="warn">2. Chaque relance : 200m forcés à allure cible. Jamais trottiner.</span><br><br><span class="ok">3. Wall Balls : séries de 6–7 d'emblée, jamais s'arrêter plus de 2s.</span></div></div>
+        </div>
+        <div class="detail-block" style="margin-top:1rem"><div class="detail-block-label">Run 8 — Le moment de vérité</div><div class="detail-block-content">C'est là que Turin s'est effondré. C'est là que Barcelone se gagne. Après les Wall Balls, les jambes vont crier. Tu vas avoir envie de marcher. <strong>Tu ne marcheras pas.</strong><br><br>Tu t'es entraîné exactement pour ça. Donne tout ce qui reste. <span class="ok">Objectif : 4:45–5:00/km.</span></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CSS for week panel visibility based on radio state -->
+<!-- Using adjacent sibling combinator: radio inputs are before week-tabs and panels in DOM -->
+<style>
+/* The radio inputs are at top of body, tabs and panels come after hero/sections */
+/* We need a different approach: wrap everything in a container */
+/* Actually the cleanest CSS-only approach for tabs requires them to be siblings */
+/* Let's use a JS-free approach with the :target pseudo-class instead */
+</style>
+
+<script>
+/* Minimal JS only for week tabs — fallback since CSS sibling approach requires specific DOM structure */
+/* All day toggles use pure CSS checkbox — fully works without JS */
+(function(){
+  var panels = document.querySelectorAll('.week-panel');
+  var tabs = document.querySelectorAll('.week-tab-label');
+  var radios = document.querySelectorAll('.week-radio');
+
+  function showWeek(idx) {
+    panels.forEach(function(p,i){ p.style.display = i===idx ? 'block' : 'none'; });
+    tabs.forEach(function(t,i){
+      t.style.color = i===idx ? 'var(--accent)' : '';
+      t.style.background = i===idx ? 'var(--bg)' : '';
+      t.style.borderColor = i===idx ? 'var(--border)' : 'transparent';
+      t.style.borderBottomColor = i===idx ? 'var(--bg)' : 'transparent';
+    });
+  }
+
+  tabs.forEach(function(t,i){
+    t.addEventListener('click', function(){ showWeek(i); });
+  });
+
+  // init
+  showWeek(0);
+})();
+</script>
+
+</body>
+</html>
